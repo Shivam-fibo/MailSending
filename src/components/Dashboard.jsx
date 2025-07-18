@@ -27,7 +27,7 @@ const Dashboard = () => {
       return;
     }
 
-    const response = await fetch('http://localhost:5000/api/mail/send', {
+    const response = await fetch('https://mail-sending-backend.vercel.app/api/mail/send', {
       method: 'POST',
       credentials: 'include',
       headers: {
