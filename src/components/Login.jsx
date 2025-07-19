@@ -4,40 +4,36 @@ import { useNavigate } from 'react-router-dom';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+
+  const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const [showEmailInputForReset, setShowEmailInputForReset] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
     try {
-      const response = await fetch('https://mail-sending-backend.vercel.app/api/auth/login', {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: "include",
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
-      }
+      if (!response.ok) throw new Error(data.message || 'Login failed');
 
       localStorage.setItem('user', JSON.stringify(data.user));
-      
-      // Redirect to dashboard or home page
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
@@ -46,27 +42,22 @@ const Login = () => {
     }
   };
 
-  const handleForgotPassword = async (e) => {
+  const handleSendOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
     try {
-      const response = await fetch('https://mail-sending-backend.vercel.app/api/auth/forgot-password', {
+      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-      console.log("response", response)
+
       const data = await response.json();
-      console.log(data)
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to send OTP');
-      }
+      if (!response.ok) throw new Error(data.message || 'Failed to send OTP');
 
       setShowOTPVerification(true);
+      setShowEmailInputForReset(false);
       setSuccessMessage('OTP sent to your email');
     } catch (err) {
       setError(err.message);
@@ -79,25 +70,19 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
     try {
-      const response = await fetch('https://mail-sending-backend.vercel.app/api/auth/verify-reset-otp', {
+      const response = await fetch('http://localhost:5000/api/auth/verify-reset-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Invalid OTP');
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Invalid OTP');
-      }
-
-      setShowForgotPassword(true);
       setShowOTPVerification(false);
-      setSuccessMessage('OTP verified. Please set your new password');
+      setShowResetPasswordForm(true);
+      setSuccessMessage('OTP verified. Please enter your new password.');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -109,7 +94,7 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    
+
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
@@ -117,23 +102,17 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch('https://mail-sending-backend.vercel.app/api/auth/reset-password', {
+      const response = await fetch('http://localhost:5000/api/auth/reset-password', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp, newPassword }),
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Reset failed');
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to reset Npassword');
-      }
-
-      setSuccessMessage('Password reset successfully. You can now login with your new password');
-      setShowForgotPassword(false);
-      setShowOTPVerification(false);
+      setSuccessMessage('Password reset successfully. You can now log in.');
+      setShowResetPasswordForm(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -142,240 +121,156 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          {showForgotPassword ? 'Reset Password' : showOTPVerification ? 'Verify OTP' : 'Sign in to your account'}
+    <div className="min-h-screen flex flex-col justify-center items-center px-6 py-12 bg-gray-50">
+      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6 space-y-6">
+        <h2 className="text-2xl font-bold text-center">
+          {showEmailInputForReset ? 'Forgot Password' :
+           showOTPVerification ? 'Verify OTP' :
+           showResetPasswordForm ? 'Reset Password' :
+           'Sign in to your account'}
         </h2>
-       
+
+        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {successMessage && <p className="text-green-600 text-sm">{successMessage}</p>}
+
+        {/* Login Form */}
+        {!showEmailInputForReset && !showOTPVerification && !showResetPasswordForm && (
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm">Email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm">Password</label>
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+            >
+              {loading ? 'Signing in...' : 'Sign In'}
+            </button>
+            <div className="text-right text-sm">
+              <button
+                type="button"
+                className="text-indigo-600 hover:underline"
+                onClick={() => {
+                  setShowEmailInputForReset(true);
+                  setError('');
+                  setSuccessMessage('');
+                }}
+              >
+                Forgot password?
+              </button>
+            </div>
+          </form>
+        )}
+
+        {/* Email Input for OTP */}
+        {showEmailInputForReset && (
+          <form onSubmit={handleSendOTP} className="space-y-4">
+            <div>
+              <label className="block text-sm">Enter your email</label>
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+            >
+              {loading ? 'Sending OTP...' : 'Send OTP'}
+            </button>
+          </form>
+        )}
+
+        {/* OTP Verification */}
+        {showOTPVerification && (
+          <form onSubmit={handleVerifyOTP} className="space-y-4">
+            <div>
+              <label className="block text-sm">Enter OTP</label>
+              <input
+                type="text"
+                required
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+            >
+              {loading ? 'Verifying...' : 'Verify OTP'}
+            </button>
+          </form>
+        )}
+
+        {/* Reset Password */}
+        {showResetPasswordForm && (
+          <form onSubmit={handleResetPassword} className="space-y-4">
+            <div>
+              <label className="block text-sm">New Password</label>
+              <input
+                type="password"
+                required
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <div>
+              <label className="block text-sm">Confirm Password</label>
+              <input
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700"
+            >
+              {loading ? 'Resetting...' : 'Reset Password'}
+            </button>
+          </form>
+        )}
+
+        {/* Register redirect */}
+        {!showOTPVerification && !showResetPasswordForm && !showEmailInputForReset && (
+          <div className="text-sm text-center text-gray-600">
+            Don’t have an account?{' '}
+            <button
+              onClick={() => navigate('/register')}
+              className="text-indigo-600 hover:underline"
+            >
+              Register
+            </button>
+          </div>
+        )}
       </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          {error && (
-            <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {successMessage && (
-            <div className="mb-4 bg-green-50 border-l-4 border-green-500 p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-green-700">{successMessage}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {showOTPVerification ? (
-            <form className="space-y-6" onSubmit={handleVerifyOTP}>
-              <div>
-                <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
-                  OTP Verification
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="otp"
-                    name="otp"
-                    type="text"
-                    required
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <p className="mt-2 text-sm text-gray-500">
-                  Please enter the OTP sent to your email address.
-                </p>
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? 'Verifying...' : 'Verify OTP'}
-                </button>
-              </div>
-            </form>
-          ) : showForgotPassword ? (
-            <form className="space-y-6" onSubmit={handleResetPassword}>
-              {!successMessage && (
-                <>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email address
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">
-                      New Password
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="newPassword"
-                        name="newPassword"
-                        type="password"
-                        required
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                      Confirm Password
-                    </label>
-                    <div className="mt-1">
-                      <input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        required
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <button
-                      type="submit"
-                      disabled={loading}
-                      className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {loading ? 'Resetting...' : 'Reset Password'}
-                    </button>
-                  </div>
-                </>
-              )}
-
-              <div className="text-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowForgotPassword(false);
-                    setError('');
-                    setSuccessMessage('');
-                  }}
-                  className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none"
-                >
-                  Back to login
-                </button>
-              </div>
-            </form>
-          ) : (
-            <form className="space-y-6" onSubmit={handleLogin}>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email address
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                
-                <div className="text-sm">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowForgotPassword(true);
-                      setError('');
-                      setSuccessMessage('');
-                    }}
-                    className="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none"
-                  >
-                    Forgot your password?
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? 'Signing in...' : 'Sign in'}
-                </button>
-              </div>
-            </form>
-          )}
-
-         
-        </div>
-  
-      <div className="mt-4 text-center text-sm text-gray-600">
-  Don’t have an account?{" "}
-  <button
-    onClick={() => navigate('/register')}
-    className="font-medium text-indigo-600 hover:text-indigo-500"
-  >
-    Register
-  </button>
-</div>
-    </div>
     </div>
   );
 };

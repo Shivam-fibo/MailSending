@@ -141,7 +141,7 @@ export default function BulkEmailLanding() {
               <p className="text-xl lg:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
                 The fastest way to deliver notes, messages, or updates to hundreds — instantly.
               </p>
-             <Link to="/login">
+             <Link to="/dashboard">
               <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
               >
                 Start Sending Emails
@@ -306,7 +306,7 @@ export default function BulkEmailLanding() {
                     <div className="text-3xl font-bold text-green-600 mb-2">25 emails free</div>
                     <div className="text-green-700">No credit card required</div>
                   </div>
-                 <Link to="/login">
+                 <Link to="/dashboard">
                   <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
                     Start Free Trial
                   </button></Link>
