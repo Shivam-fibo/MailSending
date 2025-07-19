@@ -176,7 +176,17 @@ const Register = () => {
                         </form>
                     )}
                 </div>
-            </div>
+        
+            <div className="mt-6 text-center text-sm text-gray-600 sm:mt-8">
+  Already have an account?{" "}
+  <button
+    onClick={() => navigate('/login')}
+    className="font-semibold text-blue-600 hover:text-blue-500"
+  >
+    Login
+  </button>
+</div>
+    </div>
         </div>
     )
 }
