@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  Mail, 
-  Send, 
-  Shield, 
-  Clock, 
-  CheckCircle, 
-  Users, 
-  Lock, 
-  Settings, 
-  Globe, 
-  ChevronDown, 
+import {
+  Mail,
+  Send,
+  Shield,
+  Clock,
+  CheckCircle,
+  Users,
+  Lock,
+  Settings,
+  Globe,
+  ChevronDown,
   ChevronUp,
   Zap,
   MessageSquare,
@@ -19,7 +19,7 @@ import {
 
 const AnimatedCard = ({ children, delay = 0 }) => {
   const [isVisible, setIsVisible] = useState(false);
-  
+
   React.useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), delay);
     return () => clearTimeout(timer);
@@ -34,7 +34,7 @@ const AnimatedCard = ({ children, delay = 0 }) => {
 
 const FAQItem = ({ question, answer, isOpen, onClick }) => (
   <div className="border border-gray-200 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg">
-    <button 
+    <button
       onClick={onClick}
       className="w-full flex justify-between items-center text-left"
     >
@@ -121,8 +121,8 @@ export default function BulkEmailLanding() {
       {/* Floating Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 right-20 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-40 right-20 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '4s' }}></div>
       </div>
 
       {/* Hero Section */}
@@ -141,16 +141,27 @@ export default function BulkEmailLanding() {
               <p className="text-xl lg:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
                 The fastest way to deliver notes, messages, or updates to hundreds — instantly.
               </p>
-             <Link to="/dashboard">
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
-              >
-                Start Sending Emails
-                <Send className="w-5 h-5" />
-              </button>
-             </Link>
+              <div className="flex flex-col space-y-4">
+                <Link to="/dashboard">
+                  <button
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 inline-flex items-center gap-2"
+                  >
+                    Start Sending Emails
+                    <Send className="w-5 h-5" />
+                  </button>
+                </Link>
+                <Link to="/login">
+  <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg px-8 py-4 rounded-2xl inline-flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-2xl hover:scale-105">
+    Login
+  </button>
+</Link>
+
+              </div>
+
+
             </div>
           </AnimatedCard>
-          
+
           {/* Hero Visual */}
           <AnimatedCard delay={200}>
             <div className="relative mt-16">
@@ -187,7 +198,7 @@ export default function BulkEmailLanding() {
               </p>
             </div>
           </AnimatedCard>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <AnimatedCard key={index} delay={index * 100}>
@@ -225,7 +236,7 @@ export default function BulkEmailLanding() {
               </div>
             </div>
           </AnimatedCard>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, index) => (
               <AnimatedCard key={index} delay={index * 150}>
@@ -292,7 +303,7 @@ export default function BulkEmailLanding() {
               </p>
             </div>
           </AnimatedCard>
-          
+
           <div className="max-w-2xl mx-auto">
             <AnimatedCard delay={200}>
               <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
@@ -301,15 +312,15 @@ export default function BulkEmailLanding() {
                     <CheckCircle className="w-4 h-4" />
                     Free Tier Available
                   </div>
-               
+
                   <div className="bg-green-50 rounded-2xl p-6 mb-8">
                     <div className="text-3xl font-bold text-green-600 mb-2">25 emails free</div>
                     <div className="text-green-700">No credit card required</div>
                   </div>
-                 <Link to="/dashboard">
-                  <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
-                    Start Free Trial
-                  </button></Link>
+                  <Link to="/dashboard">
+                    <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl text-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300">
+                      Start Free Trial
+                    </button></Link>
                 </div>
               </div>
             </AnimatedCard>
@@ -330,7 +341,7 @@ export default function BulkEmailLanding() {
               </p>
             </div>
           </AnimatedCard>
-          
+
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <AnimatedCard key={index} delay={index * 100}>
@@ -346,7 +357,7 @@ export default function BulkEmailLanding() {
         </div>
       </section>
 
-      
+
     </div>
   );
 }
