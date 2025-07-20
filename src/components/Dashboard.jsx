@@ -12,16 +12,36 @@ const Dashboard = () => {
   const [showUpgradePopup, setShowUpgradePopup] = useState(false);
   const [isUpgraded, setIsUpgraded] = useState(false);
 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (!storedUser) {
-      navigate('/login');
-      return;
-    }
+ useEffect(() => {
+  const storedUser = localStorage.getItem('user');
+  if (!storedUser) {
+    navigate('/login');
+    return;
+  }
 
-    const parsedUser = JSON.parse(storedUser);
-    setIsUpgraded(parsedUser.upgrade === true);
-  }, [navigate]);
+  const parsedUser = JSON.parse(storedUser);
+  const userId = parsedUser.id;
+
+  const fetchUserStatus = async () => {
+    try {
+      const res = await fetch(`https://mail-sending-backend.vercel.app/api/user/${userId}`);
+      const data = await res.json();
+      if (res.ok) {
+        setIsUpgraded(data.isUpgrade);
+        // Optional: update localStorage
+        localStorage.setItem('user', JSON.stringify({ ...parsedUser, upgrade: data.isUpgrade }));
+      }
+    } catch (err) {
+      console.error('Error fetching user:', err);
+    }
+  };
+
+  fetchUserStatus(); // initial call
+  const interval = setInterval(fetchUserStatus, 10000);
+
+  return () => clearInterval(interval);
+}, [navigate]);
+
 
   const handleLogout = () => {
     localStorage.clear();
