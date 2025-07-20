@@ -45,7 +45,7 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/');
+    navigate('/login');
   };
 
   const handleSend = async (e) => {
