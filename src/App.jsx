@@ -1,17 +1,18 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
-import Register from './components/Register'
-import Login from './components/Login'
+import Register from './components/auth/Register'
+import Login from './components/auth/Login'
 import Testing from './components/Testing'
 import Dashboard from './components/Dashboard'
-import MailSend from './components/MailSend'
+import History from './components/History'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import BulkEmailLanding from './components/LandingPage'
 import { useContext } from 'react'
+import {Context} from './main'
+import { useEffect } from 'react'
 
 function App() {
-
 
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
 
@@ -61,7 +62,7 @@ useEffect(() => {
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/mailSend' element={<MailSend />} />
+        <Route path='/mailSend' element={<History />} />
       </Routes>
     </BrowserRouter>
   )

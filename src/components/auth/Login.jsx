@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LogIn,
@@ -8,6 +8,7 @@ import {
   EyeOff,
   ArrowLeft
 } from 'lucide-react';
+import { Context } from '../../main';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -26,7 +27,8 @@ const Login = () => {
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
 
   const navigate = useNavigate();
-
+  const { isAuthorized, setIsAuthorized } = useContext(Context);
+  
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -41,8 +43,9 @@ const Login = () => {
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Login failed');
-
-      localStorage.setItem('user', JSON.stringify(data.user));
+  
+      setIsAuthorized(true);
+      setSuccessMessage('Login successful');
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);

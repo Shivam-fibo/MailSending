@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
-const MailSend = () => {
+const History = () => {
   const [emaildata, setEmailData] = useState([]);
 
   useEffect(() => {
@@ -65,4 +65,4 @@ const handleMailSend = async(item) =>{
   );
 };
 
-export default MailSend;
+export default History;
