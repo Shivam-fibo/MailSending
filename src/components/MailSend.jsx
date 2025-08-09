@@ -45,7 +45,7 @@ const handleMailSend = async(item) =>{
 }
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Mail History</h2>
+      <h2 className="text-xl font-bold mb-4 ">Mail History</h2>
 
       {emaildata.length === 0 ? (
         <p>No mails found.</p>
