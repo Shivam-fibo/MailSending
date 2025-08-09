@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SidePanel from './SidePanel';
 import MailForm from './MailSending';
 import History from './History';
+import Upgrade from './upgrade/Upgrade';
 const Layout = () => {
   const [selectedPage, setSelectedPage] = useState('mail');
 
@@ -12,9 +13,13 @@ const Layout = () => {
         
     case 'history':
         return <History/>;
+
+      case 'upgrade': 
+        return <Upgrade/>;
       default:
         return <div>Select a form from the panel</div>;
     }
+
   };
 
   return (

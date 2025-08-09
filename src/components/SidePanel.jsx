@@ -17,6 +17,11 @@ const SidePanel = ({ onSelect }) => {
             History
           </button>
         </li>
+        <li>
+          <button onClick={() => onSelect("upgrade")} className="hover:underline">
+            Upgrade
+          </button>
+        </li>
       </ul>
     </div>
   );
