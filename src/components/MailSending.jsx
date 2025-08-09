@@ -27,7 +27,7 @@ const MailForm = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/mail/send', {
+      const response = await fetch('http://localhost:5000/api/v1/mail/send', {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },

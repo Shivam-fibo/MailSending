@@ -9,7 +9,7 @@ const MailSend = () => {
 
     const FetchUserEmail = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/user/userEmail/${id}`);
+        const response = await fetch(`http://localhost:5000/api/v1/user/userEmail/${id}`);
         const body = await response.json();
         console.log("API Response:", body);
 
@@ -25,7 +25,7 @@ const MailSend = () => {
   }, []);
 const handleMailSend = async(item) =>{
    console.log(item)
-    const response = await fetch('http://localhost:5000/api/mail/send', {
+    const response = await fetch('http://localhost:5000/api/v1/mail/send', {
       method: 'POST',
       credentials: 'include',
       headers: {
