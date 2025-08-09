@@ -11,8 +11,11 @@ import BulkEmailLanding from './components/LandingPage'
 import { useContext } from 'react'
 import {Context} from './main'
 import { useEffect } from 'react'
-
-function App() {
+import PrivacyPolicy from './components/info/PrivacyPolicy';
+import TermsAndConditions from './components/info/TermsAndConditions';
+import CancellationAndRefund from './components/info/CancellationAndRefund';
+import ShippingAndDelivery from './components/info/ShippingAndDelivery';
+import ContactUs from './components/info/ContactUs';function App() {
 
   const { isAuthorized, setIsAuthorized, setUser } = useContext(Context);
 
@@ -63,6 +66,12 @@ useEffect(() => {
         <Route path='/login' element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/mailSend' element={<History />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/cancellation-and-refund" element={<CancellationAndRefund />} />
+        <Route path="/shipping-and-delivery" element={<ShippingAndDelivery />} />
+        <Route path="/contact-us" element={<ContactUs />} />
+        
       </Routes>
     </BrowserRouter>
   )
