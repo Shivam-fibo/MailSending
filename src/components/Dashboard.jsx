@@ -3,6 +3,7 @@ import Layout from './Layout';
 import { Context } from '../main';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Navbar from './layout/Navbar';
 const Dashboard = () => {
   const navigate = useNavigate()
 const {isAuthorized} = useContext(Context)
@@ -11,7 +12,12 @@ if(!isAuthorized){
     toast.error("Please Login First")
     navigate("/login")
 }
-  return <Layout />;
+  return (
+    <div>
+      <Navbar/>
+      <Layout />;
+    </div>
+  )
 };
 
 export default Dashboard;

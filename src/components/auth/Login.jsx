@@ -27,7 +27,12 @@ const Login = () => {
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
 
   const navigate = useNavigate();
-  const { isAuthorized, setIsAuthorized } = useContext(Context);
+  const { user, setUser,    isAuthorized, setIsAuthorized } = useContext(Context);
+
+   const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:5000/api/v1/auth/google/google";
+  };
+
   
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -42,8 +47,9 @@ const Login = () => {
       });
 
       const data = await response.json();
+      console.log(data)
       if (!response.ok) throw new Error(data.message || 'Login failed');
-  
+      setUser(data.user)
       setIsAuthorized(true);
       setSuccessMessage('Login successful');
       navigate('/dashboard');
@@ -275,6 +281,10 @@ const Login = () => {
             >
               {loading ? 'Signing in...' : 'Get Started'}
             </button>
+
+            <button className='my-4 ' onClick={handleGoogleLogin}>
+        Continue with Google
+      </button>
 
             {/* Register redirect */}
             <div className="text-sm text-center text-gray-500">

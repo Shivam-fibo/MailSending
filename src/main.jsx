@@ -4,14 +4,14 @@ import './index.css'
 import App from './App.jsx'
 import { createContext } from 'react'
 
-export const Context  = createContext({isAuthrized: false})
+export const Context  = createContext({isAuthorized: false})
 
 const AppWrapper = () =>{
-  const [isAuthorized, setIsAuthorized] = useState(false)
+  const [isAuthrized, setIsAuthorized] = useState(false)
   const [user, setUser] = useState({})
 
     return(
-      <Context.Provider value = {{isAuthorized, setIsAuthorized, user, setUser}}>
+      <Context.Provider value = {{isAuthrized, setIsAuthorized, user, setUser}}>
         <App/>
       </Context.Provider>
     )
