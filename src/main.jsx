@@ -7,11 +7,11 @@ import { createContext } from 'react'
 export const Context  = createContext({isAuthorized: false})
 
 const AppWrapper = () =>{
-  const [isAuthrized, setIsAuthorized] = useState(false)
+  const [isAuthorized, setIsAuthorized] = useState(false)
   const [user, setUser] = useState({})
 
     return(
-      <Context.Provider value = {{isAuthrized, setIsAuthorized, user, setUser}}>
+      <Context.Provider value = {{isAuthorized, setIsAuthorized, user, setUser}}>
         <App/>
       </Context.Provider>
     )

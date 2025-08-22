@@ -27,7 +27,7 @@ const Login = () => {
   const [showResetPasswordForm, setShowResetPasswordForm] = useState(false);
 
   const navigate = useNavigate();
-  const { user, setUser,    isAuthorized, setIsAuthorized } = useContext(Context);
+  const { user, setUser, isAuthorized, setIsAuthorized } = useContext(Context);
 
    const handleGoogleLogin = () => {
     window.location.href = "http://localhost:5000/api/v1/auth/google/google";

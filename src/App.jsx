@@ -42,7 +42,7 @@ useEffect(() => {
   };
   
   fetchUser();
-}, [isAuthorized]);
+}, [setIsAuthorized, setUser]);
   return (
     <BrowserRouter>
       <ToastContainer
@@ -63,9 +63,9 @@ useEffect(() => {
         <Route path='/test' element={<Testing />} />
         <Route path='/register' element={<Register />} />
         <Route path='/login' element={<Login />} />
-        <Route path='/dashboard' element={<Dashboard />} />
-        <Route path='/mailSend' element={<History />} />
-        <Route path='/upgrade' element={<Upgrade/>}/>
+        <Route path='/dashboard' element={isAuthorized ? <Dashboard /> : <Login />} />
+        <Route path='/mailSend' element={isAuthorized ? <History /> : <Login />} />
+        <Route path='/upgrade' element={isAuthorized ? <Upgrade/> : <Login />}/>
       </Routes>
     </BrowserRouter>
   )
