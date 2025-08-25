@@ -9,6 +9,7 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import { Context } from '../../main';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -51,7 +52,14 @@ const Login = () => {
       if (!response.ok) throw new Error(data.message || 'Login failed');
       setUser(data.user)
       setIsAuthorized(true);
-      setSuccessMessage('Login successful');
+      
+      // Show upgrade status message
+      if (data.user.isUpgrade) {
+        setSuccessMessage('Login successful! You have premium access.');
+      } else {
+        setSuccessMessage('Login successful! Upgrade to premium for unlimited features.');
+      }
+      
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);
